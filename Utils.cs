@@ -12,7 +12,7 @@ namespace Nothke
 
 		public static Vector3 Up(this Node3D node3D)
 		{
-			return -node3D.GlobalTransform.Basis.Y;
+			return node3D.GlobalTransform.Basis.Y;
 		}
 
 		public static Vector3 Right(this Node3D node3D)
