@@ -8,7 +8,7 @@ namespace Nothke
 		// Nodes
 
 		/// <summary>
-		/// Creates a Node of type T and parents to parent or if null it attaches it to the scene root
+		/// Spawns a Node of type T. If parent is not set, it will be added to the scene root.
 		/// </summary>
 		public static T Instantiate<T>(this Node node, Node parent = null) where T : Node, new()
 		{
