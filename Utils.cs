@@ -51,6 +51,12 @@ namespace Nothke
 
 		// Physics
 
+		public static void KillMotion(this RigidBody3D rb)
+		{
+			rb.LinearVelocity = Vector3.Zero;
+			rb.AngularVelocity = Vector3.Zero;
+		}
+
 		public static void Detach(this Joint3D joint)
 		{
 			joint.NodeA = null;
