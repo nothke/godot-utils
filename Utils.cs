@@ -27,5 +27,20 @@ namespace Nothke
 		{
 			return Input.IsKeyPressed(positive) ? 1 : (Input.IsKeyPressed(negative) ? -1 : 0);
 		}
+
+		/// <summary>
+		/// Creates a Node of type T and parents to parent or if null it attaches it to the scene root
+		/// </summary>
+		public static T Instantiate<T>(this Node node, Node parent = null) where T : Node, new()
+		{
+			var newNode = new T();
+
+			if (parent == null)
+				node.GetTree().Root.AddChild(newNode);
+			else
+				parent.AddChild(newNode);
+
+			return newNode;
+		}
 	}
 }
