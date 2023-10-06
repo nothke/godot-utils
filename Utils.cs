@@ -19,5 +19,13 @@ namespace Nothke
 		{
 			return node3D.GlobalTransform.Basis.X;
 		}
+
+		/// <summary>
+		/// Returns -1 when negative is pressed and 1 when positive is pressed, 0 when nothing
+		/// </summary>
+		public static float KeyAxisRaw(Key negative, Key positive)
+		{
+			return Input.IsKeyPressed(positive) ? 1 : (Input.IsKeyPressed(negative) ? -1 : 0);
+		}
 	}
 }
