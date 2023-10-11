@@ -39,6 +39,23 @@ namespace Nothke
 			return node3D.GlobalTransform.Basis.X;
 		}
 
+		// Materials
+
+		public static T CloneMaterial<T>(this MeshInstance3D mesh, int surface = 0) where T : BaseMaterial3D
+		{
+			var mat = mesh.GetActiveMaterial(surface);
+			var newMat = mat.Duplicate(false) as T;
+			mesh.MaterialOverlay = newMat;
+			return newMat;
+		}
+
+		public static T GetOrCloneMaterial<T>(this MeshInstance3D mesh, ref T mat) where T : BaseMaterial3D
+		{
+			if (mat == null)
+				return CloneMaterial<T>(mesh);
+			else return mat;
+		}
+
 		// Input
 
 		/// <summary>
