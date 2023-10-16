@@ -26,6 +26,22 @@ namespace Nothke
 
 		// 3D
 
+		/// <summary>
+		/// Reparents a node to another parent. Attempts to keep the global transform.
+		/// If parentTo is null, it parents node to the scene root.
+		/// </summary>
+		public static void SetParent(this Node3D node, Node parentTo)
+		{
+			var transform = node.GlobalTransform;
+
+			parentTo ??= node.GetTree().Root;
+
+			node.GetParent().RemoveChild(node);
+			parentTo.AddChild(node);
+
+			node.GlobalTransform = transform;
+		}
+
 		public static Vector3 Forward(this Node3D node3D)
 		{
 			return -node3D.GlobalTransform.Basis.Z;
@@ -43,9 +59,8 @@ namespace Nothke
 
 		/// <summary>
 		/// Resets node's transform in relation to the parent.
-		/// Position becomes 0,0,0; rotation 0,0,0 and scale 1,1,1
+		/// Position becomes 0,0,0, rotation 0,0,0, and scale 1,1,1.
 		/// </summary>
-		/// <param name="node3D"></param>
 		public static void ZeroOut(this Node3D node3D)
 		{
 			node3D.Transform = Transform3D.Identity;
