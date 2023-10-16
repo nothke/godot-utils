@@ -109,7 +109,11 @@ namespace Nothke
 
 		// Raycast
 
-		public static Node GetShape(this RayCast3D raycast)
+		/// <summary>
+		/// Gets the shape node that raycast has hit. This is usually a CollisionShape3D.
+		/// Returns null if none exists.
+		/// </summary>
+		public static Node GetShapeNode(this RayCast3D raycast)
 		{
 			if (!raycast.IsColliding())
 				return null;
