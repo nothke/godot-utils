@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 using JP = Godot.Generic6DofJoint3D.Param;
 
@@ -24,8 +25,6 @@ namespace Nothke
 			return newNode;
 		}
 
-		// 3D
-
 		/// <summary>
 		/// Reparents a node to another parent. If node is Node3D, it attempts to keep the global transform.
 		/// If parentTo is null, it parents node to the scene root.
@@ -46,6 +45,8 @@ namespace Nothke
 			if (node3D != null)
 				node3D.GlobalTransform = transform;
 		}
+
+		// 3D
 
 		public static Vector3 Forward(this Node3D node3D)
 		{
@@ -105,6 +106,30 @@ namespace Nothke
 			rb.LinearVelocity = Vector3.Zero;
 			rb.AngularVelocity = Vector3.Zero;
 		}
+
+		// Raycast
+
+		public static Node GetShape(this RayCast3D raycast)
+		{
+			if (!raycast.IsColliding())
+				return null;
+
+			var hitCollider = raycast.GetCollider();
+			var shapeId = raycast.GetColliderShape();
+
+			if (hitCollider is CollisionObject3D collisionObj)
+			{
+				var ownerId = collisionObj.ShapeFindOwner(shapeId);
+				var ownerObject = collisionObj.ShapeOwnerGetOwner(ownerId);
+
+				if (ownerObject is Node shapeNode)
+					return shapeNode;
+			}
+
+			return null;
+		}
+
+		// Joints
 
 		public static void Detach(this Joint3D joint)
 		{
