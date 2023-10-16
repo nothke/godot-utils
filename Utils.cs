@@ -30,7 +30,7 @@ namespace Nothke
 		/// Reparents a node to another parent. Attempts to keep the global transform.
 		/// If parentTo is null, it parents node to the scene root.
 		/// </summary>
-		public static void SetParent(this Node3D node, Node parentTo)
+		public static void SetParent(this Node node, Node parentTo)
 		{
 			var transform = node.GlobalTransform;
 
