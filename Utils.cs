@@ -144,7 +144,7 @@ namespace Nothke
 		/// <summary>
 		/// If nothing is passed for otherBody, it will fix to world
 		/// </summary>
-		public static Generic6DofJoint3D CreateFixedJoint(this RigidBody3D body, RigidBody3D otherBody = null)
+		public static Generic6DofJoint3D CreateFixedJoint(this PhysicsBody3D body, PhysicsBody3D otherBody = null)
 		{
 			var joint = Instantiate<Generic6DofJoint3D>(body);
 			joint.ZeroOut();
