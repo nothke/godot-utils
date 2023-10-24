@@ -46,6 +46,66 @@ namespace Nothke
 				node3D.GlobalTransform = transform;
 		}
 
+		/// <summary>
+		/// Returns the first (immediate) child of type T. Returns null if none is found.
+		/// </summary>
+		public static T GetFirstChild<T>(this Node node) where T : Node
+		{
+			int cc = node.GetChildCount();
+			for (int i = 0; i < cc; i++)
+			{
+				var child = node.GetChildOrNull<T>(i);
+
+				if (child != null)
+					return child;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Cached variant of node.GetFirstChild<T>().
+		/// </summary>
+		public static T GetFirstChild<T>(this Node node, ref T cachedNode) where T : Node
+		{
+			cachedNode ??= node.GetFirstChild<T>();
+			return cachedNode;
+		}
+
+		/// <summary>
+		/// Fills a list with all children of given type. 
+		/// It doesn't clear the list, it's up to you to do it.
+		/// If nested is true, it will get all subchildren too.
+		/// </summary>
+		public static void GetChildren<T>(this Node node, List<T> childrenList, bool nested = false) where T: Node
+		{
+			int cc = node.GetChildCount();
+			for (int i = 0; i < cc; i++)
+			{
+				var child = node.GetChild(i);
+				if (child is T t)
+				{
+					childrenList.Add(t);
+				}
+
+				if (nested)
+					child.GetChildren(childrenList, true);
+			}
+		}
+
+		public static T GetFirstParent<T>(this Node node, bool includeSelf = false) where T: Node
+		{
+			var parent = includeSelf ? node : node.GetParent();
+
+			if (parent == null)
+				return null;
+
+			if (parent is T t)
+				return t;
+			else 
+				return parent.GetFirstParent<T>();
+		}
+
 		// 3D
 
 		public static Vector3 Forward(this Node3D node3D)
