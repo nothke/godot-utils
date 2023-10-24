@@ -167,6 +167,33 @@ namespace Nothke
 			rb.AngularVelocity = Vector3.Zero;
 		}
 
+        /// <summary>
+        /// Adds all nested colliison shapes of node to body.
+        /// </summary>
+        public static void AddNestedShapesToBody(this Node node, PhysicsBody3D body)
+		{
+            var childShapes = new List<CollisionShape3D>();
+            node.GetChildren(childShapes, true);
+
+            foreach (var col in childShapes)
+            {
+                var ownerId = body.CreateShapeOwner(col);
+                body.ShapeOwnerAddShape(ownerId, col.Shape);
+                body.ShapeOwnerSetTransform(ownerId, body.GlobalTransform.Inverse() * col.GlobalTransform);
+                body.ShapeOwnerSetDisabled(ownerId, col.Disabled);
+            }
+        }
+
+        /// <summary>
+        /// Adds all nested colliison shapes to the first PhysicsBody3D parent.
+		/// Throws exception if none is found.
+        /// </summary>
+        public static void AddNestedShapesToFirstParentBody(this Node node)
+		{
+            var body = node.GetFirstParent<PhysicsBody3D>(true) ?? throw new Exception("AddNestedShapesToFirstParentBody: Parent PhysicsBody3D not found");
+			node.AddNestedShapesToBody(body);
+        }
+
 		// Raycast
 
 		/// <summary>
