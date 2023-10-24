@@ -172,6 +172,13 @@ namespace Nothke
 			rb.ApplyForce(globalForce, globalPosition - rb.GlobalPosition);
 		}
 
+		public static void ApplyForceAtPositionLocal(this RigidBody3D rb, Vector3 localForce, Vector3 localPosition)
+		{
+			Vector3 globalForce = rb.TransformDirection(localForce);
+			Vector3 globalPosition = rb.TransformPoint(localPosition);
+			rb.ApplyForce(globalForce, globalPosition - rb.GlobalPosition);
+		}
+
         /// <summary>
         /// Adds all nested colliison shapes of node to body.
         /// </summary>
