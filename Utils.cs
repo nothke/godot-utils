@@ -123,6 +123,13 @@ namespace Nothke
 			return node3D.GlobalTransform.Basis.X;
 		}
 
+		// Thanks to SpaceJellyfishDev:
+		public static Vector3 TransformPoint(this Node3D node, Vector3 localPoint) => node.GlobalTransform * localPoint;
+		public static Vector3 InverseTransformPoint(this Node3D node, Vector3 worldPoint) => worldPoint * node.GlobalTransform;//or  node.GlobalTransform.affine_inverse() * worldPoint
+		public static Vector3 TransformDirection(this Node3D node, Vector3 localDirection) => node.Transform.Basis * localDirection;
+		public static Vector3 InverseTransformDirection(this Node3D node, Vector3 localDirection) => localDirection * node.Transform.Basis;
+		public static Vector3 TransformVector(this Node3D node, Vector3 localVector) => node.TransformPoint(localVector) - node.GlobalPosition;
+
 		/// <summary>
 		/// Resets node's transform in relation to the parent.
 		/// Position becomes 0,0,0, rotation 0,0,0, and scale 1,1,1.
