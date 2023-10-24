@@ -167,6 +167,11 @@ namespace Nothke
 			rb.AngularVelocity = Vector3.Zero;
 		}
 
+		public static void ApplyForceAtPosition(this RigidBody3D rb, Vector3 globalForce, Vector3 globalPosition)
+		{
+			rb.ApplyForce(globalForce, globalPosition - rb.GlobalPosition);
+		}
+
         /// <summary>
         /// Adds all nested colliison shapes of node to body.
         /// </summary>
