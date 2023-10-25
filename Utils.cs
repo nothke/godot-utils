@@ -93,6 +93,10 @@ namespace Nothke
 			}
 		}
 
+		/// <summary>
+		/// Climbs up the hierarchy until it finds a node of type T.
+		/// Returns null if none is found.
+		/// </summary>
 		public static T GetFirstParent<T>(this Node node, bool includeSelf = false) where T: Node
 		{
 			var parent = includeSelf ? node : node.GetParent();
@@ -217,7 +221,7 @@ namespace Nothke
 
 		/// <summary>
 		/// Gets the shape node that raycast has hit. This is usually a CollisionShape3D.
-		/// Returns null if none exists.
+		/// Returns null if none exists, or the shape owner is not a node.
 		/// </summary>
 		public static Node GetShapeNode(this RayCast3D raycast)
 		{
