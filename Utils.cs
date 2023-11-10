@@ -179,6 +179,22 @@ namespace Nothke
 			return Input.IsKeyPressed(positive) ? 1 : (Input.IsKeyPressed(negative) ? -1 : 0);
 		}
 
+		public static bool IsKeyDown(this InputEvent e, Key key)
+		{
+			return e is InputEventKey ke && ke.IsPressed() && !ke.IsEcho() && ke.Keycode == key;
+		}
+
+		public static bool IsKeyUp(this InputEvent e, Key key)
+		{
+			return e is InputEventKey ke && !ke.IsPressed() && ke.Keycode == key;
+		}
+
+		public static bool IsMouseDown(this InputEvent e, MouseButton button) =>
+			e is InputEventMouseButton mb && mb.IsPressed() && mb.ButtonIndex == button;
+
+		public static bool IsMouseUp(this InputEvent e, MouseButton button) =>
+			e is InputEventMouseButton mb && !mb.IsPressed() && mb.ButtonIndex == button;
+
 		// Physics
 
 		public static void KillMotion(this RigidBody3D rb)
