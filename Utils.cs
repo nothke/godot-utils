@@ -220,25 +220,18 @@ namespace Nothke
 			rb.ApplyForce(globalForce, globalPosition - rb.GlobalPosition);
 		}
 
-        /// <summary>
-        /// Adds all nested colliison shapes of node to body.
-        /// </summary>
-        public static void AddNestedShapesToBody(this Node node, PhysicsBody3D body)
+		public static Vector3 GetVelocityAtLocalPoint(this RigidBody3D rb, Vector3 localPosition)
 		{
-            var childShapes = new List<CollisionShape3D>();
-            node.GetChildren(childShapes, true);
+			return rb.LinearVelocity + rb.AngularVelocity.Cross(localPosition);
+			//return rb.LinearVelocity + rb.AngularVelocity.Cross(localPosition - rb.CenterOfMass);
+		}
 
-            foreach (var col in childShapes)
-            {
-                var ownerId = body.CreateShapeOwner(col);
-                body.ShapeOwnerAddShape(ownerId, col.Shape);
-                body.ShapeOwnerSetTransform(ownerId, body.GlobalTransform.Inverse() * col.GlobalTransform);
-                body.ShapeOwnerSetDisabled(ownerId, col.Disabled);
-            }
-        }
+		public static Vector3 GetVelocityAtPoint(this RigidBody3D rb, Vector3 globalPosition)
+		{
+			Vector3 localPosition = rb.InverseTransformPoint(globalPosition);
+			return rb.TransformDirection(rb.GetVelocityAtLocalPoint(localPosition));
+		}
 
-        /// <summary>
-        /// Adds all nested colliison shapes to the first PhysicsBody3D parent.
 		/// Throws exception if none is found.
         /// </summary>
         public static void AddNestedShapesToFirstParentBody(this Node node)
