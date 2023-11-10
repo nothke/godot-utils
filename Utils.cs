@@ -154,7 +154,7 @@ namespace Nothke
 
 		// Materials
 
-		public static T CloneMaterial<T>(this MeshInstance3D mesh, int surface = 0) where T : BaseMaterial3D
+		public static T CloneMaterial<T>(this MeshInstance3D mesh, int surface = 0) where T : Material
 		{
 			var mat = mesh.GetActiveMaterial(surface);
 			var newMat = mat.Duplicate(false) as T;
@@ -162,11 +162,12 @@ namespace Nothke
 			return newMat;
 		}
 
-		public static T GetOrCloneMaterial<T>(this MeshInstance3D mesh, ref T mat) where T : BaseMaterial3D
+		public static T GetOrCloneMaterial<T>(this MeshInstance3D mesh, ref T mat) where T : Material
 		{
 			if (mat == null)
-				return CloneMaterial<T>(mesh);
-			else return mat;
+				mat = CloneMaterial<T>(mesh);
+
+			return mat;
 		}
 
 		// Input
