@@ -47,17 +47,28 @@ namespace Nothke
 		}
 
 		/// <summary>
-		/// Returns the first (immediate) child of type T. Returns null if none is found.
+		/// Returns the first child of type T. Returns null if none is found.
 		/// </summary>
-		public static T GetFirstChild<T>(this Node node) where T : Node
+		public static T GetFirstChild<T>(this Node node, bool nested = false) where T : Node
 		{
 			int cc = node.GetChildCount();
+
+
 			for (int i = 0; i < cc; i++)
 			{
-				var child = node.GetChildOrNull<T>(i);
+				var child = node.GetChild(i);
 
-				if (child != null)
-					return child;
+				if (child is T childT)
+					return childT;
+			}
+
+			for (int i = 0; i < cc; i++)
+			{
+				var child = node.GetChild(i);
+
+				T childT = GetFirstChild<T>(child, true);
+				if (childT != null)
+					return childT;
 			}
 
 			return null;
