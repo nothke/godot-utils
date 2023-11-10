@@ -208,6 +208,11 @@ namespace Nothke
 			rb.ApplyForce(globalForce, globalPosition - rb.GlobalPosition);
 		}
 
+		public static void ApplyImpulseAtPosition(this RigidBody3D rb, Vector3 globalForce, Vector3 globalPosition)
+		{
+			rb.ApplyImpulse(globalForce, globalPosition - rb.GlobalPosition);
+		}
+
 		public static void ApplyForceAtPositionLocal(this RigidBody3D rb, Vector3 localForce, Vector3 localPosition)
 		{
 			Vector3 globalForce = rb.TransformDirection(localForce);
