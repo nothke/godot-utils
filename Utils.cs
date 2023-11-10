@@ -149,20 +149,9 @@ namespace Nothke
 
 		// 3D
 
-		public static Vector3 Forward(this Node3D node3D)
-		{
-			return -node3D.GlobalTransform.Basis.Z;
-		}
-
-		public static Vector3 Up(this Node3D node3D)
-		{
-			return node3D.GlobalTransform.Basis.Y;
-		}
-
-		public static Vector3 Right(this Node3D node3D)
-		{
-			return node3D.GlobalTransform.Basis.X;
-		}
+		public static Vector3 Forward(this Node3D node3D) => -node3D.GlobalTransform.Basis.Z;
+		public static Vector3 Up(this Node3D node3D) => node3D.GlobalTransform.Basis.Y;
+		public static Vector3 Right(this Node3D node3D) => node3D.GlobalTransform.Basis.X;
 
 		// Thanks to SpaceJellyfishDev:
 		public static Vector3 TransformPoint(this Node3D node, Vector3 localPoint) => node.GlobalTransform * localPoint;
@@ -203,20 +192,14 @@ namespace Nothke
 		/// <summary>
 		/// Returns -1 when negative is pressed and 1 when positive is pressed, 0 when nothing
 		/// </summary>
-		public static float KeyAxisRaw(Key negative, Key positive)
-		{
-			return Input.IsKeyPressed(positive) ? 1 : (Input.IsKeyPressed(negative) ? -1 : 0);
-		}
+		public static float KeyAxisRaw(Key negative, Key positive) =>
+			Input.IsKeyPressed(positive) ? 1 : (Input.IsKeyPressed(negative) ? -1 : 0);
 
-		public static bool IsKeyDown(this InputEvent e, Key key)
-		{
-			return e is InputEventKey ke && ke.IsPressed() && !ke.IsEcho() && ke.Keycode == key;
-		}
+		public static bool IsKeyDown(this InputEvent e, Key key) =>
+			e is InputEventKey ke && ke.IsPressed() && !ke.IsEcho() && ke.Keycode == key;
 
-		public static bool IsKeyUp(this InputEvent e, Key key)
-		{
-			return e is InputEventKey ke && !ke.IsPressed() && ke.Keycode == key;
-		}
+		public static bool IsKeyUp(this InputEvent e, Key key) =>
+			e is InputEventKey ke && !ke.IsPressed() && ke.Keycode == key;
 
 		public static bool IsMouseDown(this InputEvent e, MouseButton button) =>
 			e is InputEventMouseButton mb && mb.IsPressed() && mb.ButtonIndex == button;
