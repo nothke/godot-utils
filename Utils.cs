@@ -29,11 +29,10 @@ namespace Nothke
 		// Nodes
 
 		/// <summary>
-		/// Spawns a Node of type T. If parent is not set, it will be added to the scene root.
+		/// Spawns a Node of type T. If parent is null, it will be added to the scene root.
 		/// Set deferred to true if called from _Ready().
-		/// MAKE SURE to call this as extension like `node.Instantiate(parent)` instead of `Instantiate(parent)`, because the first parameter will become "this" and not the parent as expected.
 		/// </summary>
-		public static T Instantiate<T>(this Node node, Node parent = null, bool deferred = false) where T : Node, new()
+		public static T Instantiate<T>(this Node node, Node parent, bool deferred = false) where T : Node, new()
 		{
 			var newNode = new T();
 
