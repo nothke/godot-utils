@@ -6,6 +6,34 @@ using JP = Godot.Generic6DofJoint3D.Param;
 
 namespace Nothke
 {
+	public struct Ray
+	{
+		public Vector3 origin;
+		public Vector3 direction;
+	}
+
+	public struct HitResult
+	{
+		public Vector3 point;
+		public Vector3 normal;
+		public int colliderId;
+		public CollisionObject3D body;
+		public int shapeId;
+		public Node shapeNode;
+		public Rid rid;
+		public Variant? metadata;
+
+		/* Typical result:
+            KEY: position, VALUE: (-0.283908, 0.135505, 0.167171)
+            KEY: normal, VALUE: (0, 0, -1)
+            KEY: collider_id, VALUE: 31910266110
+            KEY: collider, VALUE: crt2:<RigidBody3D#31910266110>
+            KEY: shape, VALUE: 4
+            KEY: rid, VALUE: RID(1075)
+            metadata: Variant
+        */
+	}
+
 	public static class Utils
 	{
 		// Nodes
@@ -262,9 +290,85 @@ namespace Nothke
 
 		// Raycast
 
+		public static Ray RayFromMousePosition(this Camera3D camera)
+		{
+			Vector2 screenPoint = camera.GetViewport().GetMousePosition();
+
+			return new Ray
+			{
+				origin = camera.ProjectRayOrigin(screenPoint),
+				direction = camera.ProjectRayNormal(screenPoint)
+			};
+		}
+
+		public static bool Raycast(this Node3D node, Ray ray, out HitResult result, bool collideWithAreas = false)
+		{
+			var space = node.GetWorld3D().DirectSpaceState;
+
+			var end = ray.origin + ray.direction;
+			var query = PhysicsRayQueryParameters3D.Create(ray.origin, end);
+
+			if (collideWithAreas)
+				query.CollideWithAreas = true;
+
+			var resultDict = space.IntersectRay(query);
+
+			if (resultDict.ContainsKey("collider"))
+			{
+				var bodyObj = resultDict["collider"].AsGodotObject();
+				CollisionObject3D body = bodyObj as CollisionObject3D;
+
+				int shapeId = resultDict["shape"].AsInt32();
+				var shapeNode = body.GetShapeNodeFromId(shapeId);
+
+				Variant? metadata = null;
+				if (resultDict.ContainsKey("metadata"))
+					metadata = resultDict["metadata"];
+
+				result = new HitResult
+				{
+					point = resultDict["position"].AsVector3(),
+					normal = resultDict["normal"].AsVector3(),
+					colliderId = resultDict["collider_id"].AsInt32(),
+					body = body,
+					shapeId = shapeId,
+					shapeNode = shapeNode,
+					rid = resultDict["rid"].AsRid(),
+					metadata = metadata
+				};
+
+				return true;
+			}
+			else
+			{
+				result = default;
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Gets the shape node that raycast has hit. This is usually a CollisionShape3D.
-		/// Returns null if none exists, or the shape owner is not a node.
+		/// Returns null if none exists.
+		/// </summary>
+		public static Node GetShapeNodeFromId(this CollisionObject3D body, int shapeId)
+		{
+			var hitCollider = body;
+
+			if (hitCollider is CollisionObject3D collisionObj)
+			{
+				var ownerId = collisionObj.ShapeFindOwner(shapeId);
+				var ownerObject = collisionObj.ShapeOwnerGetOwner(ownerId);
+
+				if (ownerObject is Node shapeNode)
+					return shapeNode;
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the shape node that raycast has hit. This is usually a CollisionShape3D.
+		/// Returns null if none exists.
 		/// </summary>
 		public static Node GetShapeNode(this RayCast3D raycast)
 		{
