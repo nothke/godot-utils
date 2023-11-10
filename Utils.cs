@@ -90,7 +90,7 @@ namespace Nothke
 		/// It doesn't clear the list, it's up to you to do it.
 		/// If nested is true, it will get all subchildren too.
 		/// </summary>
-		public static void GetChildren<T>(this Node node, List<T> childrenList, bool nested = false) where T: Node
+		public static void GetChildren<T>(this Node node, List<T> childrenList, bool nested = false) where T : Node
 		{
 			int cc = node.GetChildCount();
 			for (int i = 0; i < cc; i++)
@@ -106,11 +106,7 @@ namespace Nothke
 			}
 		}
 
-		/// <summary>
-		/// Climbs up the hierarchy until it finds a node of type T.
-		/// Returns null if none is found.
-		/// </summary>
-		public static T GetFirstParent<T>(this Node node, bool includeSelf = false) where T: Node
+		public static T GetFirstParent<T>(this Node node, bool includeSelf = false) where T : Node
 		{
 			var parent = includeSelf ? node : node.GetParent();
 
@@ -119,7 +115,7 @@ namespace Nothke
 
 			if (parent is T t)
 				return t;
-			else 
+			else
 				return parent.GetFirstParent<T>();
 		}
 
