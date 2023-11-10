@@ -13,14 +13,16 @@ namespace Nothke
 		/// <summary>
 		/// Spawns a Node of type T. If parent is not set, it will be added to the scene root.
 		/// </summary>
-		public static T Instantiate<T>(this Node node, Node parent = null) where T : Node, new()
+		public static T Instantiate<T>(this Node node, Node parent = null, bool deferred = false) where T : Node, new()
 		{
 			var newNode = new T();
 
-			if (parent == null)
-				node.GetTree().Root.AddChild(newNode);
-			else
+			parent ??= node.GetTree().Root;
+
+			if (!deferred)
 				parent.AddChild(newNode);
+			else
+				parent.CallDeferred("add_child", newNode);
 
 			return newNode;
 		}
