@@ -403,7 +403,7 @@ namespace Nothke
 		/// </summary>
 		public static Generic6DofJoint3D CreateFixedJoint(this PhysicsBody3D body, PhysicsBody3D otherBody = null)
 		{
-			var joint = Instantiate<Generic6DofJoint3D>(body);
+			var joint = body.Instantiate<Generic6DofJoint3D>(body);
 			joint.ZeroOut();
 
 			joint.NodeA = body.GetPath();
@@ -438,11 +438,10 @@ namespace Nothke
 			public JointOptions() { }
 		};
 
-		public static Generic6DofJoint3D CreateJoint(this RigidBody3D body, RigidBody3D otherBody, in JointOptions options)
+		public static Generic6DofJoint3D CreateJoint(this PhysicsBody3D body, PhysicsBody3D otherBody, in JointOptions options)
 		{
-			var joint = Instantiate<Generic6DofJoint3D>(options.anchorInWorldSpace ? body.GetTree().Root : body);
+			var joint = body.Instantiate<Generic6DofJoint3D>(options.anchorInWorldSpace ? null : body);
 
-			joint.ZeroOut();
 			joint.Position = options.anchorOffset;
 			joint.Rotation = options.anchorRotation;
 
@@ -474,6 +473,13 @@ namespace Nothke
 				joint.SetParamX(JP.AngularSpringDamping, options.angularSpringDamping);
 				joint.SetParamY(JP.AngularSpringDamping, options.angularSpringDamping);
 				joint.SetParamZ(JP.AngularSpringDamping, options.angularSpringDamping);
+			}
+
+			if (options.unlimitedLinearMotion)
+			{
+				joint.Set("linear_limit_x/enabled", false);
+				joint.Set("linear_limit_y/enabled", false);
+				joint.Set("linear_limit_z/enabled", false);
 			}
 
 			if (options.linearSpringStiffness > 0)
