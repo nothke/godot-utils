@@ -22,16 +22,6 @@ namespace Nothke
 		public Node shapeNode;
 		public Rid rid;
 		public Variant? metadata;
-
-		/* Typical result:
-            KEY: position, VALUE: (-0.283908, 0.135505, 0.167171)
-            KEY: normal, VALUE: (0, 0, -1)
-            KEY: collider_id, VALUE: 31910266110
-            KEY: collider, VALUE: crt2:<RigidBody3D#31910266110>
-            KEY: shape, VALUE: 4
-            KEY: rid, VALUE: RID(1075)
-            metadata: Variant
-        */
 	}
 
 	public static class Utils
@@ -40,6 +30,8 @@ namespace Nothke
 
 		/// <summary>
 		/// Spawns a Node of type T. If parent is not set, it will be added to the scene root.
+		/// Set deferred to true if called from _Ready().
+		/// MAKE SURE to call this as extension like `node.Instantiate(parent)` instead of `Instantiate(parent)`, because the first parameter will become "this" and not the parent as expected.
 		/// </summary>
 		public static T Instantiate<T>(this Node node, Node parent = null, bool deferred = false) where T : Node, new()
 		{
@@ -58,6 +50,7 @@ namespace Nothke
 		/// <summary>
 		/// Reparents a node to another parent. If node is Node3D, it attempts to keep the global transform.
 		/// If parentTo is null, it parents node to the scene root.
+		/// Note that parenting to non-uniform scaled parents will probably fail.
 		/// </summary>
 		public static void SetParent(this Node node, Node parentTo)
 		{
@@ -106,6 +99,7 @@ namespace Nothke
 
 		/// <summary>
 		/// Cached variant of node.GetFirstChild<T>().
+		/// Syntax sugar that inferres type so specifying generic type is not required.
 		/// </summary>
 		public static T GetFirstChild<T>(this Node node, ref T cachedNode) where T : Node
 		{
